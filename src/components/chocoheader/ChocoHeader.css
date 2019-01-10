@@ -1,0 +1,12 @@
+.header-container {
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.header-container img {
+    margin: 10px;
+    padding: 10px;
+    height: 100px;
+}
