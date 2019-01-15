@@ -3,8 +3,33 @@ import './Loading.css';
 
 class Loading extends Component {
 
+    componentDidMount() {
+        this.getMyLocation();
+    }
+
+    getMyLocation() {
+        const location = window.navigator && window.navigator.geolocation
+
+        if (location) {
+            location.getCurrentPosition((position) => {
+                this.setState({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                }, () => {
+                    this.doFetch();
+                });
+            }, (error) => {
+                this.setState({
+                    lat: 41.8844497,
+                    lng: -87.6398351
+                }, () => {
+                    this.doFetch();
+                });
+            })
+        }
+    }
+
     async doFetch() {
-        console.log("Do Fetch");
         let geosource = {
             "origin": {
                 "type": "Feature",
@@ -20,8 +45,7 @@ class Loading extends Component {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [-87.66229762,41.88446248]
-                    // "coordinates": [-87.63977033, 41.88383873]
+                    "coordinates": [this.state.lng, this.state.lat]
                 },
                 "properties": {
                     "name": "Solstice"
@@ -29,57 +53,35 @@ class Loading extends Component {
             }
         };
 
-        /*
-        fetch('http://www.solstice.com', {
-            method: 'GET',
-            mode: 'no-cors'
-        })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        */
-
-        let data = new FormData();
-        data.append( "json", JSON.stringify( geosource ) );
-
-
-        fetch('http://10.10.105.77:3000/geojson', {
+        fetch('/geojson', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: data
+            body: JSON.stringify(geosource)
         })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
+            .then(response => {
+                return response.json();
+            })
+            .then(jsonData => {
+                return JSON.stringify(jsonData)
+            })
+            .then(jsonStr => {
+                this.props.history.push({
+                    pathname: '/results',
+                    state: { response: jsonStr }
+                });
             })
             .catch((err) => {
                 console.log(err);
             });
     }
 
-    componentDidMount() {
-        this.doFetch();
-
-        /*
-        let that = this;
-
-        setTimeout(function() {
-            that.props.history.push('/results');
-        },2000);
-        */
-    }
-
     render() {
         return (
             <div className="loading-container">
-                I am loading
+                Loading...
             </div>
         );
     }

@@ -1,0 +1,25 @@
+.results-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.results {
+    display: flex;
+    flex-direction: column;
+    height: 75px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 50px;
+    justify-content: center;
+    align-content: center;
+    background-color: yellow;
+}
+
+.map-container {
+    height: 100%;
+    width: 100%;
+}
